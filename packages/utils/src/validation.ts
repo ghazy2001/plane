@@ -62,18 +62,16 @@ export const SLUG_REGEX = /^[\p{L}\p{N}_-]+$/u;
 /**
  * @description Validates person names (first name, last name)
  * @param {string} name - Name to validate
- * @param {boolean} [required=true] - Whether the field is required
  * @returns {boolean | string} true if valid, error message if invalid
  * @example
  * validatePersonName("John") // returns true
  * validatePersonName("O'Brien") // returns true
  * validatePersonName("Jean-Paul") // returns true
  * validatePersonName("John<script>") // returns error message
- * validatePersonName("", false) // returns true
  */
-export const validatePersonName = (name: string, required: boolean = true): boolean | string => {
+export const validatePersonName = (name: string): boolean | string => {
   if (!name || name.trim() === "") {
-    return required ? "Name is required" : true;
+    return "Name is required";
   }
 
   if (name.length > 50) {
@@ -89,6 +87,24 @@ export const validatePersonName = (name: string, required: boolean = true): bool
   }
 
   return true;
+};
+
+/**
+ * @description Validates optional person names (e.g. optional last name). Returns true if empty or omitted, otherwise validates name constraints.
+ * @param {string} [name] - Name to validate
+ * @returns {boolean | string} true if valid or empty, error message if invalid
+ * @example
+ * validateOptionalPersonName("") // returns true
+ * validateOptionalPersonName(undefined) // returns true
+ * validateOptionalPersonName("John") // returns true
+ * validateOptionalPersonName("John<script>") // returns error message
+ */
+export const validateOptionalPersonName = (name?: string): boolean | string => {
+  if (!name || name.trim() === "") {
+    return true;
+  }
+
+  return validatePersonName(name);
 };
 
 /**
